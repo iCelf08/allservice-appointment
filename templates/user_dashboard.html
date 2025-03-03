@@ -1,0 +1,57 @@
+<!-- user_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar (if needed) -->
+    <div class="flex h-screen">
+        <div class="w-64 bg-blue-800 text-white p-6">
+            <h2 class="text-2xl font-bold mb-6">User Dashboard</h2>
+            <ul>
+                <li class="mb-4"><a href="#" class="text-white hover:text-blue-300">My Appointments</a></li>
+                <li class="mb-4"><a href="#" class="text-white hover:text-blue-300">Profile</a></li>
+                <li><a href="#" class="text-white hover:text-blue-300">Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-1 p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h1 class="text-3xl font-semibold mb-4">Welcome, {{ user.username }}!</h1>
+                <p class="text-gray-700">Here you can view and manage your appointments.</p>
+
+                <!-- List of Appointments -->
+                <div class="mt-6">
+                    <h2 class="text-xl font-semibold">Upcoming Appointments</h2>
+                    <table class="min-w-full bg-white border border-gray-300 mt-4">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Date</th>
+                                <th class="py-2 px-4 border-b">Service</th>
+                                <th class="py-2 px-4 border-b">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">March 5, 2025</td>
+                                <td class="py-2 px-4 border-b">Dental Checkup</td>
+                                <td class="py-2 px-4 border-b text-green-500">Confirmed</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">March 12, 2025</td>
+                                <td class="py-2 px-4 border-b">Physical Therapy</td>
+                                <td class="py-2 px-4 border-b text-yellow-500">Pending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

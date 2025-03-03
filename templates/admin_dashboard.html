@@ -1,0 +1,196 @@
+<!-- admin_dashboard.html -->
+ {% load static %}
+ {% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <div class="w-64 bg-gray-800 text-white p-6">
+            <img src="{% static 'images/visuel-home.png' %}" alt="Innovency Logo" class="w-32 mb-4">
+            <h2 class="text-xl font-bold mb-4 px-10"> - admin -</h2>
+            <div class="mt-4">
+                <ul >
+                    <li class=" mb-2 p-2 hover:bg-gray-700">
+                        <a href="{% url 'admin_dashboard' %}" class="text-white hover:text-blue-300 flex items-center space-x-3">
+                            <i class="fas fa-tachometer-alt"></i> <!-- Dashboard Icon -->
+                            <span>{% trans 'Dashboard' %}</span>
+                        </a>
+                    </li>
+                    <li class="mb-2 p-2 hover:bg-gray-700">
+                        <a href="#" class="text-white hover:text-blue-300 flex items-center space-x-3">
+                            <i class="fas fa-calendar-check"></i> <!-- Manage Appointments Icon -->
+                            <span>{% trans 'Manage Appointments' %}</span>
+                        </a>
+                    </li>
+                    <li class="mb-2 p-2 hover:bg-gray-700">
+                        <a href="#" class="text-white hover:text-blue-300 flex items-center space-x-3">
+                            <i class="fas fa-users"></i> <!-- Manage Users Icon -->
+                            <span>{% trans 'Manage Users' %}</span>
+                        </a>
+                    </li>
+                    <li class="mb-2 p-2 hover:bg-gray-700">
+                        <a href="{% url 'appointment:get_service_list_type' 'html' %}" class="text-white hover:text-blue-300 flex items-center space-x-3">
+                            <i class="fas fa-cogs"></i> <!-- Services Icon -->
+                            <span>{% trans 'Services' %}</span>
+                        </a>
+                    </li>
+                    <li class="mb-2 mt-8 p-2 hover:bg-gray-700">
+                        <a href="#" id="logoutBtn" class="text-white hover:text-red-300 flex items-center space-x-3">
+                            <i class="fas fa-sign-out-alt"></i> <!-- Logout Icon -->
+                            <span>{% trans 'Logout' %}</span>
+                        </a>
+                    </li>
+                    
+                </ul></div>
+        </div>
+        <div id="logoutModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+                <h2 class="text-xl font-semibold text-center mb-4">Are you sure you want to log out?</h2>
+                <div class="flex justify-between">
+                    <button id="cancelLogout" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">
+                        Cancel
+                    </button>
+                    <button id="confirmLogout" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Content Area -->
+        <div class="flex-1 p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center mb-6">
+                    <img 
+                        src="{{ user.profile_picture }}" 
+                        alt="Profile Picture" 
+                        class="w-12 h-12 rounded-full mr-4" 
+                        onerror="this.onerror=null; this.style.display='none'; document.getElementById('user-icon').style.display='block';">
+                    <svg id="user-icon" class="w-12 h-12 text-gray-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M12 14c4 0 8 2 8 6H4c0-4 4-6 8-6z"></path>
+                    </svg>
+                    <p class="text-gray-700 text-lg font-semibold">{{ user.username }}</p>
+                </div>
+
+                <div class=" space-x-8 mb-6 ">   
+            <!-- Appointment Management -->
+                <div class=" items-center justify-center">
+                    <div class="flex items-center justify-between"> <h2 class="text-xl font-semibold pl-6 ">Recent Appointments</h2>
+                        <div class="flex space-x-4"><button class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"> Add New Staff</button>
+                    <button><button class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"> Manage Staff</button></div>
+                    
+                  </div>
+                   
+                    <table class="min-w-full bg-white border border-gray-300 mt-4 items-center">
+                        <thead>
+                            <tr>
+                                <th class="py-2 pr-12 border-b">Appointment ID</th>
+                                <th class="py-2 pr-12 border-b">Client Name</th>
+                                <th class="py-2 pr-12 border-b">Service</th>
+                                <th class="py-2 pr-12 border-b">Status</th>
+                                <th class="py-2 pr-12 border-b" >Staff</th>
+                                <th class="py-2 pr-12 border-b">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">001</td>
+                                <td class="py-2 px-4 border-b">amina Bouknadel </td>
+                                <td class="py-2 px-4 border-b">Physical Therapy </td>
+                                <td class="py-2 px-4 border-b text-green-500">Confirmed</td>
+                                <td class="py-2 px-4 border-b">Kawtar Hind</td>
+                                <td class="py-2 px-4 border-b"><button class="text-blue-500">View</button></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">002</td>
+                                <td class="py-2 px-4 border-b">Hidayah Ali</td>
+                                <td class="py-2 px-4 border-b">Nurse Care</td>
+                                <td class="py-2 px-4 border-b text-green-500">Confirmed</td>
+                                <td class="py-2 px-4 border-b">Erraji khalid</td>
+                                <td class="py-2 px-4 border-b"><button class="text-blue-500">View</button></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">003</td>
+                                <td class="py-2 px-4 border-b">abdulrahman Alami</td>
+                                <td class="py-2 px-4 border-b">Physical Therapy</td>
+                                <td class="py-2 px-4 border-b text-yellow-500">Pending</td>
+                                <td class="py-2 px-4 border-b">Erraji khalid</td>
+                                <td class="py-2 px-4 border-b"><button class="text-blue-500">View</button></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">004</td>
+                                <td class="py-2 px-4 border-b">Ines Khalifi</td>
+                                <td class="py-2 px-4 border-b">elderly care</td>
+
+                                <td class="py-2 px-4 border-b text-green-500">Confirmed</td>
+                                <td class="py-2 px-4 border-b">Erraji khalid</td>
+                                <td class="py-2 px-4 border-b"><button class="text-blue-500">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>             
+                   
+        
+
+
+                <!-- Manage Staff -->
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!-- Include JavaScript -->
+<script>
+    // Show the modal when clicking the logout button
+    document.getElementById('logoutBtn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default behavior (navigate to logout URL)
+        document.getElementById('logoutModal').classList.remove('hidden'); // Show the modal
+    });
+
+    // Hide the modal when clicking Cancel
+    document.getElementById('cancelLogout').addEventListener('click', function() {
+        document.getElementById('logoutModal').classList.add('hidden'); // Hide the modal
+    });
+
+    // Handle the logout process via AJAX when confirming
+    document.getElementById('confirmLogout').addEventListener('click', function() {
+        // Perform AJAX logout request to Django custom logout view
+        fetch("{% url 'custom_logout' %}", {
+            method: 'GET',  // GET request to the custom logout view
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,  // CSRF token
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Hide modal after logout
+                document.getElementById('logoutModal').classList.add('hidden');
+                // Redirect to login page
+                window.location.href = "{% url 'account_login' %}";  // Redirect to the login page
+            } else {
+                alert("Logout failed. Please try again.");
+            }
+        })
+        .catch(error => {
+            console.error('Error during logout:', error);
+            alert("Logout failed. Please try again.");
+        });
+    });
+</script>
+
+
+<!-- Include CSRF Token for AJAX -->
+<form method="post" style="display:none;">
+    {% csrf_token %}
+</form>

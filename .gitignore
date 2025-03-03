@@ -1,0 +1,28 @@
+# Django
+*.log
+*.pot
+*.pyc
+_pycache_/
+db.sqlite3
+media/
+staticfiles/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+node_modules/
+.env
+.vscode
