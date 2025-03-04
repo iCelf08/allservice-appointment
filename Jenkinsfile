@@ -56,15 +56,16 @@ pipeline {
         }
 
         stage('Setup Virtual Environment') {
-            steps {
-                script {
-                    // Install python3-venv to avoid ensurepip error
-                    sh 'sudo apt update && sudo apt install -y python3.12-venv'
-                    sh 'python3 -m venv ${VENV_DIR}'
-                    sh '. ${VENV_DIR}/bin/activate'
-                }
-            }
+    steps {
+        script {
+            // Ensure python3-venv is installed
+            sh 'sudo apt-get update && sudo apt-get install -y python3.12-venv'
+            sh 'python3 -m venv ${VENV_DIR}'
+            sh '. ${VENV_DIR}/bin/activate'
         }
+    }
+}
+
 
         stage('Install Dependencies') {
             steps {
