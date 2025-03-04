@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/iCelf08/allservice-appointment.git'
+                git branch: 'master', url: 'https://github.com/iCelf08/allservice-appointment.git'
             }
         }
 
