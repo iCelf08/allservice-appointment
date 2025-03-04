@@ -31,21 +31,30 @@ pipeline {
         }
 
         stage('Start PostgreSQL Container') {
-            steps {
-                script {
-                    // Start PostgreSQL container
-                    sh """
-                    docker run --name ${POSTGRES_CONTAINER_NAME} -e POSTGRES_USER=${POSTGRES_USER} \
-                    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} \
-                    -p ${POSTGRES_PORT}:${POSTGRES_PORT} -d ${POSTGRES_IMAGE}
-                    """
-                    // Wait for PostgreSQL to be ready
-                    sh 'sleep 10'
-                    // Optionally check if PostgreSQL is ready
-                    sh 'docker logs ${POSTGRES_CONTAINER_NAME} | tail -n 10'
-                }
-            }
+    steps {
+        script {
+            // Check if the PostgreSQL container exists and remove it
+            sh """
+            if docker ps -a -q -f name=${POSTGRES_CONTAINER_NAME}; then
+                echo "Stopping and removing existing ${POSTGRES_CONTAINER_NAME} container"
+                docker stop ${POSTGRES_CONTAINER_NAME}
+                docker rm ${POSTGRES_CONTAINER_NAME}
+            fi
+            """
+            
+            // Start a new PostgreSQL container
+            sh """
+            docker run --name ${POSTGRES_CONTAINER_NAME} -e POSTGRES_USER=${POSTGRES_USER} \
+            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} \
+            -p ${POSTGRES_PORT}:${POSTGRES_PORT} -d ${POSTGRES_IMAGE}
+            """
+            
+            // Wait for PostgreSQL to be ready
+            sh 'sleep 10'
         }
+    }
+}
+
 
         stage('Setup Virtual Environment') {
             steps {
