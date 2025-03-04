@@ -17,7 +17,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Cloner le projet depuis GitHub
-                git branch: 'main', url: 'https://github.com/iCelf08/allservice-appointment.git'
+                git branch: 'master', url: 'https://github.com/iCelf08/allservice-appointment.git'
             }
         }
 
