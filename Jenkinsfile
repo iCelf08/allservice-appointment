@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_DIR = "${WORKSPACE}"  // Le répertoire de travail de Jenkins où le projet est cloné
+        PROJECT_DIR = "${WORKSPACE}"
         VENV_DIR = "${PROJECT_DIR}/venv"
-        DJANGO_SETTINGS_MODULE = 'PriseRendez.settings.production'  // Remplace par ton module de settings Django
+        DJANGO_SETTINGS_MODULE = 'PriseRendez.settings.production'
         POSTGRES_IMAGE = 'postgres:latest'
         POSTGRES_CONTAINER_NAME = 'pgsql-dev'
         POSTGRES_USER = 'postgres'
@@ -16,22 +16,33 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Cloner le projet depuis GitHub
-                git branch: 'master', url: 'https://github.com/iCelf08/allservice-appointment.git'
+                git branch: 'main', url: 'https://github.com/iCelf08/allservice-appointment.git'
+            }
+        }
+
+        stage('Stop and Remove Existing Containers') {
+            steps {
+                script {
+                    // Clean up existing containers to avoid conflicts
+                    sh 'docker ps -q -f name=${POSTGRES_CONTAINER_NAME} | xargs -r docker stop | xargs -r docker rm'
+                    sh 'docker ps -q -f name=django-dev | xargs -r docker stop | xargs -r docker rm'
+                }
             }
         }
 
         stage('Start PostgreSQL Container') {
             steps {
                 script {
-                    // Démarrer le conteneur PostgreSQL
+                    // Start PostgreSQL container
                     sh """
                     docker run --name ${POSTGRES_CONTAINER_NAME} -e POSTGRES_USER=${POSTGRES_USER} \
                     -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} \
                     -p ${POSTGRES_PORT}:${POSTGRES_PORT} -d ${POSTGRES_IMAGE}
                     """
-                    // Attendre que PostgreSQL démarre
+                    // Wait for PostgreSQL to be ready
                     sh 'sleep 10'
+                    // Optionally check if PostgreSQL is ready
+                    sh 'docker logs ${POSTGRES_CONTAINER_NAME} | tail -n 10'
                 }
             }
         }
@@ -39,7 +50,6 @@ pipeline {
         stage('Setup Virtual Environment') {
             steps {
                 script {
-                    // Créer et activer l'environnement virtuel
                     sh 'python3 -m venv ${VENV_DIR}'
                     sh '. ${VENV_DIR}/bin/activate'
                 }
@@ -49,7 +59,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Installer les dépendances Python depuis requirements.txt
                     sh '. ${VENV_DIR}/bin/activate && pip install -r requirements.txt'
                 }
             }
@@ -58,7 +67,6 @@ pipeline {
         stage('Run Migrations') {
             steps {
                 script {
-                    // Appliquer les migrations
                     sh '. ${VENV_DIR}/bin/activate && python manage.py migrate'
                 }
             }
@@ -67,7 +75,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Exécuter les tests unitaires
                     sh '. ${VENV_DIR}/bin/activate && python manage.py test'
                 }
             }
@@ -76,13 +83,14 @@ pipeline {
         stage('Build and Run Django Container') {
             steps {
                 script {
-                    // Construire et démarrer l'image Docker pour Django
                     sh """
                     docker build -t allservice-appointment .
                     docker run --name django-dev --link ${POSTGRES_CONTAINER_NAME}:db -p 8000:8000 -d allservice-appointment
                     """
-                    // Attendre que Django soit prêt
+                    // Wait for Django container to be ready
                     sh 'sleep 10'
+                    // Optionally check if Django is ready
+                    sh 'docker logs django-dev | tail -n 10'
                 }
             }
         }
@@ -90,8 +98,7 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 script {
-                    // Déployer via Docker (ou toute autre méthode)
-                    // Assure-toi que tes conteneurs sont liés et correctement configurés
+                    // Optionally use docker-compose to manage multiple containers
                     sh 'docker-compose down && docker-compose up -d'
                 }
             }
@@ -100,17 +107,13 @@ pipeline {
 
     post {
         always {
-            // Actions à exécuter après chaque exécution
             echo 'Pipeline terminé.'
         }
         success {
-            // Actions en cas de succès
             echo 'Déploiement réussi !'
         }
         failure {
-            // Actions en cas d'échec
             echo 'Le déploiement a échoué.'
-            // Stopper les conteneurs en cas d'échec
             sh 'docker stop django-dev pgsql-dev'
             sh 'docker rm django-dev pgsql-dev'
         }
