@@ -96,8 +96,12 @@ WSGI_APPLICATION = 'PriseRendez.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'allservice_db',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
+        'HOST': 'pgsql-dev',  # Nom du conteneur PostgreSQL
+        'PORT': '5432',
     }
 }
 
