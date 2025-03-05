@@ -50,7 +50,7 @@ pipeline {
                     docker ps -q -f name=django-dev | xargs -r docker stop | xargs -r docker rm
                     docker build -t allservice-appointment .
                     docker run --name django-dev --network ${NETWORK_NAME} \
-                      -p 8000:8000 -d allservice-appointment
+                      -p 8001:8000 -d allservice-appointment
                     """
                     // Attendre que Django démarre
                     sh 'sleep 10'
