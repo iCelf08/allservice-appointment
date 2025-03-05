@@ -18,7 +18,7 @@ urlpatterns = [
     path('user-dashboard/', user_dashboard, name='user_dashboard'),
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/', admin.site.urls),
-    path('appointment/', include('appointment.urls')), 
+    #path('appointment/', include('appointment.urls')), 
     
 
 
