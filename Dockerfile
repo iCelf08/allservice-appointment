@@ -17,7 +17,7 @@ COPY . /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exposer le port 8000
-EXPOSE 8000
+EXPOSE 8001
 
 # Commande pour démarrer l'application Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
