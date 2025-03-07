@@ -52,14 +52,16 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Should be at the top
     # 'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.common.CommonMiddleware',  # This is the correct place for common middleware
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    # Remove this line if using an older version of django-allauth
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
+
 
 
 AUTHENTICATION_BACKENDS = [
