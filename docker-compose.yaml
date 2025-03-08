@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_HOST: pgsql-dev
       POSTGRES_PORT: 5432
-      DJANGO_SETTINGS_MODULE: PriseRendez.settings.production  # Vérifiez ce chemin
+      DJANGO_SETTINGS_MODULE: PriseRendez.settings  # Vérifiez ce chemin
     networks:
       - mynetwork
 
