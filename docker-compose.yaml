@@ -15,7 +15,7 @@ services:
     depends_on:
       - db  # Sans condition de santé
     environment:
-      POSTGRES_HOST: pgsql-dev
+      POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       DJANGO_SETTINGS_MODULE: PriseRendez.settings  # Vérifiez ce chemin
     networks:
