@@ -6,7 +6,7 @@ services:
     build: .
     command: >
       sh -c "
-        python manage.py wait_for_db &&  # Assurez-vous que ce script existe
+        #python manage.py wait_for_db &&  # Assurez-vous que ce script existe
         python manage.py migrate &&
         python manage.py runserver 0.0.0.0:8001
       "
