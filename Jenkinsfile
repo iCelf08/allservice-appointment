@@ -10,8 +10,8 @@ pipeline {
         stage('Cleanup') {  // 🔧 Nouvelle étape
             steps {
                 sh '''
-                docker stop django-dev pgsql-dev || true
-                docker rm -f django-dev pgsql-dev || true
+                docker stop django-dev  || true
+                docker rm -f django-dev || true
                 docker network prune -f || true
                 '''
             }
