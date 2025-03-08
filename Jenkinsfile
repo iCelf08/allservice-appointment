@@ -3,10 +3,20 @@ pipeline {
 
     environment {
         PROJECT_DIR = "${WORKSPACE}"
-        NETWORK_NAME = 'mynetwork'
+        NETWORK_NAME = 'mynetwork'  // 🔑 Nom de réseau cohérent
     }
 
     stages {
+        stage('Cleanup') {  // 🔧 Nouvelle étape
+            steps {
+                sh '''
+                docker stop django-dev pgsql-dev || true
+                docker rm -f django-dev pgsql-dev || true
+                docker network prune -f || true
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/iCelf08/allservice-appointment.git'
@@ -21,7 +31,7 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                sh 'docker-compose down || true'
+                sh 'docker-compose down --remove-orphans || true'
                 sh 'docker-compose up -d --build'
             }
         }
@@ -29,7 +39,7 @@ pipeline {
 
     post {
         failure {
-            sh 'docker-compose down || true'
+            sh 'docker-compose down --remove-orphans || true'
         }
     }
 }
