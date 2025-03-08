@@ -13,7 +13,7 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
     networks:
-      - app_network
+      - mynetwork 
 
   db:
     image: postgres:latest
@@ -24,7 +24,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - app_network
+      - mynetwork 
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
@@ -35,5 +35,5 @@ volumes:
   postgres_data:
 
 networks:
-  app_network:
+  mynetwork :
     driver: bridge
