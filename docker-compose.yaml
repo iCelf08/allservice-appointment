@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_HOST: pgsql-dev  # 🔥 Correspond au nom du conteneur DB
       POSTGRES_PORT: 5432
-      DJANGO_SETTINGS_MODULE: PriseRendez.settings.production
+      DJANGO_SETTINGS_MODULE: PriseRendez.settings
     networks:
       - mynetwork
 
