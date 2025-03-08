@@ -2,28 +2,27 @@ version: '3.8'
 
 services:
   web:
-    container_name: django-dev  # 🔥 Nom personnalisé
+    container_name: django-dev
     build: .
     command: >
       sh -c "
-        python manage.py wait_for_db &&
+        python manage.py wait_for_db &&  # Assurez-vous que ce script existe
         python manage.py migrate &&
         python manage.py runserver 0.0.0.0:8001
       "
     ports:
       - "8001:8001"
     depends_on:
-      db:
-        condition: service_healthy
+      - db  # Sans condition de santé
     environment:
-      POSTGRES_HOST: pgsql-dev  # 🔥 Correspond au nom du conteneur DB
+      POSTGRES_HOST: pgsql-dev
       POSTGRES_PORT: 5432
-      DJANGO_SETTINGS_MODULE: PriseRendez.settings
+      DJANGO_SETTINGS_MODULE: PriseRendez.settings.production  # Vérifiez ce chemin
     networks:
       - mynetwork
 
   db:
-    container_name: pgsql-dev  # 🔥 Nom personnalisé
+    container_name: pgsql-dev
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
@@ -33,11 +32,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - mynetwork
-    restart: on-failure  # 🔥 Redémarrage automatique
+    restart: on-failure
 
 volumes:
   postgres_data:
 
 networks:
-  mynetwork:  # 🔥 Nom de réseau cohérent
+  mynetwork:
     driver: bridge
