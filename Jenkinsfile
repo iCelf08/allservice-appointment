@@ -1,15 +1,11 @@
 pipeline {
     agent any
-    environment {
-        NETWORK_NAME = 'mynetwork'
-    }
     stages {
         stage('Cleanup') {
             steps {
                 sh '''
-                docker stop django-dev pgsql-dev || true
-                docker rm django-dev pgsql-dev || true
-                docker network rm ${NETWORK_NAME} || true
+                docker stop django-dev || true
+                docker rm django-dev || true
                 '''
             }
         }
@@ -20,15 +16,15 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker network create ${NETWORK_NAME} || true'
-                sh 'docker-compose down --remove-orphans || true'
-                sh 'docker-compose up -d --build'
+                sh 'docker network inspect mynetwork >/dev/null 2>&1 || docker network create mynetwork'
+                sh 'docker-compose -f docker-compose.yml down --remove-orphans || true'
+                sh 'docker-compose -f docker-compose.yml up -d --build'
             }
         }
     }
     post {
         failure {
-            sh 'docker-compose down || true'
+            sh 'docker-compose -f docker-compose.django.yml down || true'
         }
     }
 }
