@@ -31,14 +31,14 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                sh 'docker-compose -f docker-compose.django.yml up -d --build web'
+                sh 'docker-compose -f docker-compose.yml up -d --build web'
             }
         }
     }
     
     post {
         failure {
-            sh 'docker-compose -f docker-compose.django.yml down || true'
+            sh 'docker-compose -f docker-compose.yml down || true'
         }
     }
 }
