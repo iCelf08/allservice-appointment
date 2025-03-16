@@ -5,8 +5,12 @@ pipeline {
         stage('Cleanup') {
             steps {
                 sh '''
-                docker stop django-dev || true
-                docker rm django-dev || true
+                 if docker ps -a | grep -q django-appointement; then
+                docker stop django-appointement || true
+                docker rm django-appointement || true
+                else
+                        echo "Container django-appointement does not exist. Skipping cleanup."
+                fi
                 '''
             }
         }
