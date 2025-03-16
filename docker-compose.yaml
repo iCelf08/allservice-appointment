@@ -14,7 +14,7 @@ services:
     environment:
       - POSTGRES_HOST=pgsql-dev
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD="H1h2b3!4P0stgR$Q"
+      - POSTGRES_PASSWORD=H1h2b3!4P0stgR$Q
       - POSTGRES_DB=allservice_db
       - DJANGO_SETTINGS_MODULE=PriseRendez.settings
     networks:
